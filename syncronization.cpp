@@ -4,32 +4,51 @@
 #include<sys/types.h>
 #include<stdlib.h>
 #include<unistd.h>
+void *fun1(void *receive);
+void *fun2(void *receive);
+void *fun3(void *receive);
 int main()
 {
-   int student1;
-   student1 =fork();
-   if(student1==0)
-   {
-   	printf("Student1");
-   }
-   else
-   {
-   	pid_t student2=fork();
-   	if(student2==0)
-   	{
-   		printf("Student2");
-	   }
-	   else
-	   {
-	   		pid_t student3=fork();
-   	if(student3==0)
-   	{
-   		printf("Student3");
-	   }
-	   else
-	   {
-	   	printf("Teacher");
-	   }
-	   }
-   }
+pthread_mutex_init(&l, NULL); //initializing mutex locks
+pthread_t student1, student2,student3;
+while(1)
+{
+
+pthread_create(&student1, NULL, fun1, NULL);
+pthread_create(&student2, NULL, fun2, NULL);
+pthread_create(&student3, NULL, fun3, NULL);
+pthread_join(student1, NULL);
+pthread_join(student2,NULL);
+pthread_join(student3,NULL);
+}
+}
+void *fun1(void *receive)
+{
+    int x;
+    pthread_mutex_lock(&l);
+    x=shared;
+    x++;  
+    sleep(1); 
+    shared=x; 
+    pthread_mutex_unlock(&l);
+}
+void *fun2(void *receive)
+{
+    int x;
+    pthread_mutex_lock(&l);
+    x=shared;
+    x++;  
+    sleep(1); 
+    shared=x; 
+    pthread_mutex_unlock(&l);
+}
+void *fun3(void *receive)
+{
+    int x;
+    pthread_mutex_lock(&l);
+    x=shared;
+    x++;  
+    sleep(1); 
+    shared=x; 
+    pthread_mutex_unlock(&l);
 }
